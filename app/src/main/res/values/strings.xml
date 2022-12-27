@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">Traveler</string>
+    <string name="diana">About me</string>
+    <string name="bio">Buna! \n
+        Numele meu este Vuta-Popescu Diana sunt studenta in anul 4 la Inginerie Electrica si Stiinta Calculatoarelor la Electronica Aplicata.
+    Pentru licenta am decis sa fac un dispozitiv inteligent care transmite informatii despre mediul inconjurator.
+        Pentru acest proiect am nevoie de o aplicatie care sa prelucreze datele primite de la senzorii din dispozitiv.
+    Aceasta aplicatie ofera si alte facilitati pe langa luarea datelor si prelucrarea lor, ca de exemplu afisarea pozelor din trafic intr-un feed.\n
+    </string>
+    <string name="name">Name</string>
+    <string name="wannapost">Do you want to post something?</string>
+    <string name="what_is_your_nickname">What is your Nickname?</string>
+    <string name="done">Done</string>
+    <string name="nicknameText">""</string>
+    <string name="login_form_title"> Login</string>
+    <string name="login_form_login"> LOGIN</string>
+    <string name="login_form_username"> Username</string>
+    <string name="login_form_password"> Password</string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome!"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="title_activity_login">LoginActivity</string>
+</resources>
