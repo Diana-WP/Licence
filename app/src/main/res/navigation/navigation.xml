@@ -2,13 +2,30 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/loginActivity">
+    android:id="@+id/nav_graph"
+    android:label="@string/action_sign_in"
+    app:startDestination="@id/mainActivity">
 
 
-    <fragment
+    <activity
+        android:id="@+id/aboutMeActivity"
+        android:name="com.example.traveler.AboutMeActivity"
+        tools:layout="@layout/activity_about" />
+    <activity
+        android:id="@+id/feedActivity"
+        android:name="com.example.traveler.FeedActivity"
+        android:label="activity_feed"
+        tools:layout="@layout/activity_feed" />
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.example.traveler.MainActivity"
+        android:label="activity_main"
+        tools:layout="@layout/activity_main" />
+    <activity
         android:id="@+id/loginActivity"
-        android:name="com.example.traveler.ui.login.LoginActivity"
+        android:name="com.example.traveler.RegisterActivity"
         android:label="activity_login"
-        tools:layout="@layout/activity_login" />
+        tools:layout="@layout/activity_register" />
+
 
 </navigation>

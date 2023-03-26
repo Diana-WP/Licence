@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorAccent"
+    tools:context=".AboutMeActivity">
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        app:itemBackground="@color/purple_200"
+        app:itemIconTint="@drawable/selector"
+        app:itemTextColor="@drawable/selector"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/menu_navigation"
+        tools:layout_editor_absoluteX="-47dp" />
+            <TextView
+                android:id="@+id/name_text"
+                style="@style/NameStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="92dp"
+                android:text="@string/aboutMe"
+                android:textAlignment="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <EditText
+                android:id="@+id/name_edit"
+                style="@style/NameStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="233dp"
+                android:autofillHints=""
+                android:hint="@string/what_is_your_nickname"
+                android:inputType="textPersonName"
+                android:minHeight="48dp"
+                android:textAlignment="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/name_text" />
+
+            <Button
+                android:id="@+id/name_button"
+                style="@android:style/Widget.Material.Light.Button.Toggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="233dp"
+                android:fontFamily="@font/roboto"
+                android:text="@string/done"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/name_edit"
+                app:layout_constraintTop_toBottomOf="@+id/name_text"
+                app:strokeColor="#A54CAF" />
+
+            <EditText
+                android:id="@+id/status"
+                style="@style/NameStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="34dp"
+                android:layout_marginTop="31dp"
+                android:autofillHints=""
+                android:hint="@string/What_is_your_occupation"
+                android:inputType="textPersonName"
+                android:minHeight="48dp"
+                android:textAlignment="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/name_edit" />
+
+            <Button
+                android:id="@+id/occupation_button"
+                style="@android:style/Widget.Material.Light.Button.Toggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="31dp"
+                android:layout_marginEnd="36dp"
+                android:fontFamily="@font/roboto"
+                android:text="@string/done"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/status"
+                app:layout_constraintTop_toBottomOf="@+id/name_button"
+                app:strokeColor="#A54CAF" />
+
+            <EditText
+                android:id="@+id/Age"
+                style="@style/NameStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="31dp"
+                android:autofillHints=""
+                android:hint="@string/what_is_your_age"
+                android:inputType="number"
+                android:minHeight="48dp"
+                android:textAlignment="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/status" />
+
+            <Button
+                android:id="@+id/age_button"
+                style="@android:style/Widget.Material.Light.Button.Toggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="96dp"
+                android:layout_marginTop="31dp"
+                android:layout_marginEnd="33dp"
+                android:fontFamily="@font/roboto"
+                android:text="@string/done"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/Age"
+                app:layout_constraintTop_toBottomOf="@+id/occupation_button"
+                app:strokeColor="#A54CAF" />
+
+            <TextView
+                android:id="@+id/nickname_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorAccent"
+                android:paddingBottom="@dimen/small_padding"
+                android:textAlignment="center"
+                android:textColorHighlight="#9C27B0"
+                android:textSize="20sp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/name_edit"
+                app:layout_constraintEnd_toEndOf="@+id/name_edit"
+                app:layout_constraintHorizontal_bias="0.502"
+                app:layout_constraintStart_toStartOf="@+id/name_edit"
+                app:layout_constraintTop_toTopOf="@+id/name_edit"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/status_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="@+id/status"
+                app:layout_constraintStart_toStartOf="@+id/status"
+                app:layout_constraintTop_toTopOf="@+id/status" />
+
+            <TextView
+                android:id="@+id/age_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/Age"
+                app:layout_constraintEnd_toEndOf="@+id/Age"
+                app:layout_constraintStart_toStartOf="@+id/Age"
+                app:layout_constraintTop_toTopOf="@+id/Age" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="185dp"
+                android:layout_height="193dp"
+                android:layout_marginStart="113dp"
+                android:layout_marginTop="14dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/name_text"
+                app:srcCompat="@drawable/roba" />
+
+        <Button
+            android:id="@+id/logout"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="36dp"
+            android:accessibilityLiveRegion="polite"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:text="Log Out"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="#392222"
+            app:iconTint="#754141"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/Age"
+            app:rippleColor="@color/purple_700" />
+</androidx.constraintlayout.widget.ConstraintLayout>
