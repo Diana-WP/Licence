@@ -4,10 +4,11 @@
     <color name="purple_500">#FAB586</color>
     <color name="button">#9C27</color>
     <color name="purple_700">#FFF1D3BE</color>
-    <color name="teal_200">#9C27B0</color>
+    <color name="teal_200">#C35330</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="colorAccent">#FFF1D3BE</color>
+    <color name="maro">#5A3838</color>
 
 </resources>
