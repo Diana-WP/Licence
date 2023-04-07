@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="purple_200">#BEA28E</color>
-    <color name="purple_500">#FAB586</color>
+    <color name="purple_500">#C48F6C</color>
     <color name="button">#9C27</color>
     <color name="purple_700">#FFF1D3BE</color>
+    <color name="bottomNav">#C48F6C</color>
     <color name="teal_200">#C35330</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>

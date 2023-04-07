@@ -2,39 +2,45 @@ package com.example.traveler
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
 import android.text.TextUtils
-import android.text.TextWatcher
-import android.util.Log.d
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
+import com.android.volley.AuthFailureError
+import com.android.volley.RequestQueue
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.example.traveler.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.android.synthetic.main.activity_main.*
+
 
 @Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
-    private lateinit var email: EditText
-    private lateinit var age: EditText
-    private lateinit var password: EditText
+    private lateinit var emailText: EditText
+    private lateinit var ageText: EditText
+    private lateinit var passwordText: EditText
     private lateinit var confirm_password: EditText
-    private lateinit var phone: EditText
-
+    private lateinit var phoneText: EditText
+    private val url: String = "http://192.168.0.105/traveler/register.php"
+    private lateinit var requestQueue: RequestQueue
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        email = findViewById(R.id.email)
-        phone = findViewById(R.id.phone)
-        age = findViewById(R.id.age)
-        password = findViewById(R.id.password)
+        emailText = findViewById(R.id.email)
+        phoneText = findViewById(R.id.phone)
+        ageText = findViewById(R.id.age)
+        passwordText = findViewById(R.id.password)
         confirm_password = findViewById(R.id.confirm_password)
         binding.buttonReg.isEnabled = false
+
 
         // Initialize and assign variable
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
@@ -43,7 +49,6 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.buttonSave).setOnClickListener {
             validateEmptyForm()
-
         }
 
         // Perform item selected listener
@@ -58,6 +63,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.about -> return@OnNavigationItemSelectedListener true
                 R.id.info -> {
+
                     val b = Intent(applicationContext, InfoActivity::class.java)
                     startActivity(b)
                     finish()
@@ -177,40 +183,44 @@ class MainActivity : AppCompatActivity() {
             binding.buttonReg.visibility = View.VISIBLE
 
         }
+        // Instantiate the RequestQueue.
+        requestQueue = Volley.newRequestQueue(this)
 
+        findViewById<Button>(R.id.buttonReg).setOnClickListener {
+            registerUser()
+        }
     }
-
 
     private fun validateEmptyForm() {
 
         val icon = AppCompatResources.getDrawable(baseContext, R.drawable.ic_attention)
         icon?.setBounds(0, 0, icon.intrinsicWidth, icon.intrinsicHeight)
         when {
-            TextUtils.isEmpty(email.text.toString().trim()) -> {
-                email.setError("Please Enter Username", icon)
+            TextUtils.isEmpty(emailText.text.toString().trim()) -> {
+                emailText.setError("Please Enter Username", icon)
             }
-            TextUtils.isEmpty(phone.text.toString().trim()) -> {
-                phone.setError("Please Enter a Phone Number", icon)
+            TextUtils.isEmpty(phoneText.text.toString().trim()) -> {
+                phoneText.setError("Please Enter a Phone Number", icon)
             }
-            TextUtils.isEmpty(age.text.toString().trim()) -> {
-                age.setError("Please Enter Your Age", icon)
+            TextUtils.isEmpty(ageText.text.toString().trim()) -> {
+                ageText.setError("Please Enter Your Age", icon)
             }
-            TextUtils.isEmpty(password.text.toString().trim()) -> {
-                password.setError("Please Enter Password", icon)
+            TextUtils.isEmpty(passwordText.text.toString().trim()) -> {
+                passwordText.setError("Please Enter Password", icon)
             }
             TextUtils.isEmpty(confirm_password.text.toString().trim()) -> {
                 confirm_password.setError("Please Enter Password Again", icon)
             }
-            email.text.toString().isNotEmpty() &&
-                    phone.text.toString().isNotEmpty() &&
-                    age.text.toString().isNotEmpty() &&
-                    password.text.toString().isNotEmpty() &&
+            emailText.text.toString().isNotEmpty() &&
+                    phoneText.text.toString().isNotEmpty() &&
+                    ageText.text.toString().isNotEmpty() &&
+                    passwordText.text.toString().isNotEmpty() &&
                     confirm_password.text.toString().isNotEmpty() -> {
-                if (email.text.toString().contains(Regex(pattern ="@"))) {
-                    if (phone.text.toString().contains(Regex(pattern="[0-9]"))) {
-                        if (age.text.toString().contains(Regex(pattern="[0-9]"))) {
-                            if (password.text.toString().length >= 5) {
-                                if (confirm_password.text.toString() == password.text.toString()) {
+                if (emailText.text.toString().contains(Regex(pattern = "@"))) {
+                    if (phoneText.text.toString().contains(Regex(pattern = "[0-9]"))) {
+                        if (ageText.text.toString().contains(Regex(pattern = "[0-9]"))) {
+                            if (passwordText.text.toString().length >= 5) {
+                                if (confirm_password.text.toString() == passwordText.text.toString()) {
                                     Toast.makeText(
                                         baseContext,
                                         "Your data seems fine",
@@ -218,22 +228,58 @@ class MainActivity : AppCompatActivity() {
                                     ).show()
                                     binding.buttonReg.isEnabled = true
                                 } else {
-                                    confirm_password.setError("Passwords don't match")
+                                    confirm_password.error = "Passwords don't match"
                                 }
                             } else {
-                                password.setError("Please enter at least 5 characters!")
+                                passwordText.error = "Please enter at least 5 characters!"
                             }
                         } else {
-                            age.setError("Please enter a valid age")
+                            ageText.error = "Please enter a valid age"
                         }
                     } else {
-                        phone.setError("Please enter a valid phone number")
+                        phoneText.setError("Please enter a valid phone number")
                     }
                 } else {
-                    email.setError("Please enter valid id")
+                    emailText.setError("Please enter valid id")
                 }
             }
         }
-        }
+    }
 
+    private fun registerUser() {
+        val email = emailText.text.toString().trim()
+        val phone = phoneText.text.toString().trim()
+        val age = ageText.text.toString().trim()
+        val password = passwordText.text.toString().trim()
+
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(phone) || TextUtils.isEmpty(age) || TextUtils.isEmpty(password) ) {
+            Toast.makeText(this, "Please fill all the fields.", Toast.LENGTH_SHORT).show()
+        } else {
+            val stringRequest = object : StringRequest(
+                Method.POST, url,
+                Response.Listener { response ->
+                    // registration successful
+                    Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
+                    // start the feed activity
+                    val intent = Intent(this, FeedActivity::class.java)
+                    startActivity(intent)
+                    // finish the current activity
+                    finish()
+                },
+                Response.ErrorListener { error ->
+                    Toast.makeText(this, "Registration failed: ${error.message}", Toast.LENGTH_SHORT).show()
+                }) {
+                @Throws(AuthFailureError::class)
+                override fun getParams(): Map<String, String> {
+                    val params = HashMap<String, String>()
+                    params["email"] = email
+                    params["phone"] = phone
+                    params["age"] = age
+                    params["password"] = password
+                    return params
+                }
+            }
+            requestQueue.add(stringRequest)
+        }
+    }
 }
