@@ -1,5 +1,6 @@
 package com.example.traveler
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.traveler.databinding.ActivityFeedBinding
@@ -21,6 +23,7 @@ import kotlinx.android.synthetic.main.activity_feed.*
 class FeedActivity : AppCompatActivity() {
     var pickedPhoto : Uri? = null
     var pickedBitMap : Bitmap? = null
+
     private lateinit var binding: ActivityFeedBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +57,7 @@ class FeedActivity : AppCompatActivity() {
             false
         })
     }
+
     fun pickedPhoto(view: View){
         if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE)
         != PackageManager.PERMISSION_GRANTED) {
@@ -79,6 +83,7 @@ class FeedActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
+    @SuppressLint("SuspiciousIndentation")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == 2 && resultCode == Activity.RESULT_OK && data != null){
             pickedPhoto = data.data

@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import com.android.volley.AuthFailureError
+import com.android.volley.NetworkError
 import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var phoneText: EditText
     private val url: String = "http://192.168.0.105/traveler/register.php"
     private lateinit var requestQueue: RequestQueue
+    private lateinit var prefManager: PrefManager
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,8 +42,7 @@ class MainActivity : AppCompatActivity() {
         passwordText = findViewById(R.id.password)
         confirm_password = findViewById(R.id.confirm_password)
         binding.buttonReg.isEnabled = false
-
-
+        prefManager = PrefManager(this)
         // Initialize and assign variable
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         // Set Home selected
@@ -50,6 +51,8 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.buttonSave).setOnClickListener {
             validateEmptyForm()
         }
+        init()
+        checkLogin()
 
         // Perform item selected listener
         bottomNavigationView.setOnNavigationItemSelectedListener(BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -189,6 +192,22 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.buttonReg).setOnClickListener {
             registerUser()
         }
+
+    }
+    private fun init(){
+        prefManager = PrefManager(this)
+        emailText = findViewById(R.id.email)
+        phoneText = findViewById(R.id.phone)
+        ageText = findViewById(R.id.age)
+        passwordText = findViewById(R.id.password)
+    }
+
+    private fun checkLogin() {
+        if (prefManager.isLogin()!!) {
+            val intent = Intent(this, FeedActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun validateEmptyForm() {
@@ -216,9 +235,9 @@ class MainActivity : AppCompatActivity() {
                     ageText.text.toString().isNotEmpty() &&
                     passwordText.text.toString().isNotEmpty() &&
                     confirm_password.text.toString().isNotEmpty() -> {
-                if (emailText.text.toString().contains(Regex(pattern = "@"))) {
-                    if (phoneText.text.toString().contains(Regex(pattern = "[0-9]"))) {
-                        if (ageText.text.toString().contains(Regex(pattern = "[0-9]"))) {
+                if (emailText.text.toString().matches(Regex(pattern = "^([\\w.-]+)@(gmail|yahoo|hotmail|outlook|gmx)\\.com\$"))) {
+                    if (phoneText.text.toString().contains(Regex(pattern = "[0-9]{10}\$"))) {
+                        if (ageText.text.toString().contains(Regex(pattern = "[0-9]{2,3}\$"))) {
                             if (passwordText.text.toString().length >= 5) {
                                 if (confirm_password.text.toString() == passwordText.text.toString()) {
                                     Toast.makeText(
@@ -252,22 +271,39 @@ class MainActivity : AppCompatActivity() {
         val age = ageText.text.toString().trim()
         val password = passwordText.text.toString().trim()
 
+        // Generate unique key using email and phone
+        val key = "${email}_${phone}"
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(phone) || TextUtils.isEmpty(age) || TextUtils.isEmpty(password) ) {
             Toast.makeText(this, "Please fill all the fields.", Toast.LENGTH_SHORT).show()
         } else {
             val stringRequest = object : StringRequest(
                 Method.POST, url,
                 Response.Listener { response ->
-                    // registration successful
-                    Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
-                    // start the feed activity
-                    val intent = Intent(this, FeedActivity::class.java)
-                    startActivity(intent)
-                    // finish the current activity
-                    finish()
+                    // If response from the php is success
+                    if (response.trim().equals("Registration successful")) {
+                        Toast.makeText(this, "Registration success", Toast.LENGTH_LONG).show()
+                        prefManager.setLogin(true)
+                        //It will open the next activity
+                        val intent = Intent(this, FeedActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else if(response.trim().equals("Error: User is already registered")) {
+                        Toast.makeText(this, "User already registered", Toast.LENGTH_LONG).show()
+                        prefManager.setLogin(true)
+                        //It will open the next activity
+                        val intent = Intent(this, FeedActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else{
+                        Toast.makeText(this, "Registration failed", Toast.LENGTH_LONG).show()
+                    }
                 },
                 Response.ErrorListener { error ->
-                    Toast.makeText(this, "Registration failed: ${error.message}", Toast.LENGTH_SHORT).show()
+                    if (error is NetworkError) {
+                        Toast.makeText(this, "Cannot connect to internet!", Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(this, error.toString(), Toast.LENGTH_LONG).show()
+                    }
                 }) {
                 @Throws(AuthFailureError::class)
                 override fun getParams(): Map<String, String> {
@@ -276,6 +312,7 @@ class MainActivity : AppCompatActivity() {
                     params["phone"] = phone
                     params["age"] = age
                     params["password"] = password
+                    params["key"] = key // Add the generated key to the request parameters
                     return params
                 }
             }
