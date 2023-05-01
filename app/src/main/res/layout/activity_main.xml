@@ -3,11 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/sign"
-    tools:context=".MainActivity">
+    tools:context=".UI.MainActivity">
 
 
     <ImageButton
@@ -23,19 +22,6 @@
         app:srcCompat="@android:drawable/ic_lock_idle_lock"
         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="58dp"
-        android:layout_alignParentBottom="true"
-        app:itemBackground="@color/bottomNav"
-        app:itemIconTint="@drawable/selector"
-        app:itemTextColor="@drawable/selector"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/menu_navigation" />
 
     <EditText
         android:id="@+id/email"
@@ -255,16 +241,16 @@
         android:layout_width="148dp"
         android:layout_height="50dp"
         android:layout_marginStart="131dp"
-        android:layout_marginTop="7dp"
+        android:layout_marginTop="56dp"
         android:layout_marginEnd="39dp"
         android:layout_marginBottom="19dp"
-        android:backgroundTint="#CF996E"
+        android:backgroundTint="#974D35"
         android:text="@string/register"
         app:icon="@android:drawable/ic_menu_add"
         app:iconTint="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toEndOf="@+id/buttonSave"
         app:layout_constraintTop_toBottomOf="@+id/confirm_password"
         app:layout_constraintVertical_bias="1.0" />
@@ -274,7 +260,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="39dp"
-        android:layout_marginTop="7dp"
+        android:layout_marginTop="56dp"
         android:layout_marginEnd="268dp"
         android:layout_marginBottom="19dp"
         android:backgroundTint="#CF996E"
@@ -282,11 +268,24 @@
         android:textColor="#FFFFFF"
         app:icon="@android:drawable/checkbox_on_background"
         app:iconTint="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/confirm_password"
         app:layout_constraintVertical_bias="0.894" />
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        app:itemBackground="@color/white"
+        app:itemIconTint="@drawable/selector"
+        app:itemTextColor="@drawable/selector"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/menu_navigation"
+        tools:layout_editor_absoluteX="-47dp" >
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

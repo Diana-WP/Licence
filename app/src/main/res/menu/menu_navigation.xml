@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-
     <item
         android:id="@+id/about"
         android:title="@string/about"
@@ -10,10 +9,19 @@
         android:id="@+id/feed"
         android:title="@string/feed"
         android:icon="@drawable/ic_connect"/>
+    <item
+        android:id="@+id/track"
+        android:title="@string/track"
+        android:icon="@drawable/add"/>
+    <item
+        android:id="@+id/activities"
+        android:title="@string/activity"
+        android:icon="@drawable/bike"/>
+
 
     <item
-        android:id="@+id/info"
+        android:id="@+id/statistics"
         android:title="@string/info"
-        android:icon="@drawable/bike"/>
+        android:icon="@drawable/statistics"/>
 
 </menu>

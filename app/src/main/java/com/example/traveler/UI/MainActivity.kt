@@ -1,4 +1,4 @@
-package com.example.traveler
+package com.example.traveler.UI
 
 import android.content.Intent
 import android.os.Bundle
@@ -15,10 +15,10 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.traveler.PrefManager
+import com.example.traveler.R
 import com.example.traveler.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.android.synthetic.main.activity_main.*
-
 
 @Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
@@ -35,7 +35,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         emailText = findViewById(R.id.email)
         phoneText = findViewById(R.id.phone)
         ageText = findViewById(R.id.age)
@@ -43,40 +42,17 @@ class MainActivity : AppCompatActivity() {
         confirm_password = findViewById(R.id.confirm_password)
         binding.buttonReg.isEnabled = false
         prefManager = PrefManager(this)
-        // Initialize and assign variable
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         // Set Home selected
         bottomNavigationView.selectedItemId = R.id.about
+
 
         findViewById<Button>(R.id.buttonSave).setOnClickListener {
             validateEmptyForm()
         }
         init()
         checkLogin()
-
-        // Perform item selected listener
-        bottomNavigationView.setOnNavigationItemSelectedListener(BottomNavigationView.OnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.feed -> {
-                    val a = Intent(applicationContext, FeedActivity::class.java)
-                    startActivity(a)
-                    finish()
-                    overridePendingTransition(0, 0)
-                    return@OnNavigationItemSelectedListener true
-                }
-                R.id.about -> return@OnNavigationItemSelectedListener true
-                R.id.info -> {
-
-                    val b = Intent(applicationContext, InfoActivity::class.java)
-                    startActivity(b)
-                    finish()
-                    overridePendingTransition(0, 0)
-                    return@OnNavigationItemSelectedListener true
-                }
-            }
-            false
-        })
-
         fun addEmail(view: View) {
             binding.apply {
                 binding.emailText.text = binding.email.text.toString()
@@ -194,6 +170,7 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
     private fun init(){
         prefManager = PrefManager(this)
         emailText = findViewById(R.id.email)
@@ -236,8 +213,8 @@ class MainActivity : AppCompatActivity() {
                     passwordText.text.toString().isNotEmpty() &&
                     confirm_password.text.toString().isNotEmpty() -> {
                 if (emailText.text.toString().matches(Regex(pattern = "^([\\w.-]+)@(gmail|yahoo|hotmail|outlook|gmx)\\.com\$"))) {
-                    if (phoneText.text.toString().contains(Regex(pattern = "[0-9]{10}\$"))) {
-                        if (ageText.text.toString().contains(Regex(pattern = "[0-9]{2,3}\$"))) {
+                    if (phoneText.text.toString().contains(Regex(pattern = "\\d{10}\$"))) {
+                        if (ageText.text.toString().contains(Regex(pattern = "\\d{2,3}\$"))) {
                             if (passwordText.text.toString().length >= 5) {
                                 if (confirm_password.text.toString() == passwordText.text.toString()) {
                                     Toast.makeText(
