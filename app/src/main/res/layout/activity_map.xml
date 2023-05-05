@@ -9,8 +9,8 @@
 
     <Spinner
         android:id="@+id/spFilter"
-        android:layout_width="144dp"
-        android:layout_height="38dp"
+        android:layout_width="147dp"
+        android:layout_height="35dp"
         android:entries="@array/filter_options"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
@@ -21,11 +21,13 @@
         android:id="@+id/tvFilterBy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="25dp"
         android:text="Sort by:"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/spFilter"
         app:layout_constraintEnd_toStartOf="@+id/spFilter"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.437" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTracks"

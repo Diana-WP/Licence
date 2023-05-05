@@ -35,6 +35,10 @@ class StatisticsActivity : AppCompatActivity() {
         setContentView(binding.root)
         prefManager = PrefManager(this)
 
+        tvTotalTime = findViewById(R.id.tvTotalTime) // add this line to initialize tvTotalTime
+        tvTotalDistance = findViewById(R.id.tvTotalDistance) // add this line to initialize tvTotalDistance
+        tvAverageSpeed = findViewById(R.id.tvAverageSpeed) // add this line to initialize tvAverageSpeed
+
         subscribeToObservers()
 
         // Initialize and assign variable
@@ -42,11 +46,11 @@ class StatisticsActivity : AppCompatActivity() {
 
         binding.buttonRead.setOnClickListener {readData()}
         // Set Home selected
-        bottomNavigationView.selectedItemId = com.example.traveler.R.id.statistics
+        bottomNavigationView.selectedItemId = R.id.statistics
         // Perform item selected listener
         bottomNavigationView.setOnNavigationItemSelectedListener(BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                com.example.traveler.R.id.feed -> {
+                R.id.feed -> {
                     val a = Intent(applicationContext, FeedActivity::class.java)
                     startActivity(a)
                     finish()
@@ -61,7 +65,7 @@ class StatisticsActivity : AppCompatActivity() {
                     overridePendingTransition(0, 0)
                     return@OnNavigationItemSelectedListener true
                 }
-                com.example.traveler.R.id.track -> {
+                R.id.track -> {
                     val b = Intent(applicationContext, TrackingActivity::class.java)
                     startActivity(b)
                     finish()
@@ -69,12 +73,9 @@ class StatisticsActivity : AppCompatActivity() {
                     return@OnNavigationItemSelectedListener true
                 }
 
-
             }
             false
         })
-
-
     }
 
 

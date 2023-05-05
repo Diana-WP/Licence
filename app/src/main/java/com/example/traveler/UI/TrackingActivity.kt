@@ -41,7 +41,7 @@ import kotlin.math.round
 @Suppress("DEPRECATION")
 @AndroidEntryPoint
 class TrackingActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by viewModels()
 
     private var map: GoogleMap? = null
     private lateinit var binding: ActivityTrackingBinding
@@ -147,6 +147,7 @@ class TrackingActivity : AppCompatActivity(), EasyPermissions.PermissionCallback
     }
 
     private fun stopTrack(){
+        tvTimer.text = "00:00:00:00"
         sendCommandToService(ACTION_STOP_SERVICE)
         miCancelTracking.isVisible = false
         val intent = Intent(this, MapActivity::class.java)
@@ -180,13 +181,13 @@ class TrackingActivity : AppCompatActivity(), EasyPermissions.PermissionCallback
     }
     private fun updateTracking(isTracking: Boolean){
         this.isTracking = isTracking
-        if(!isTracking){
+        if(!isTracking && currentTimeInMillis > 0L){
 
             btnToggleTrack.text = buildString {
         append("Start")
     }
             btnFinishTrack.visibility = View.VISIBLE
-        }else {
+        }else if (isTracking){
             btnToggleTrack.text = buildString {
         append("Pause")
     }

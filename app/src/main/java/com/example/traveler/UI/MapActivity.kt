@@ -10,6 +10,7 @@ import android.widget.Spinner
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.traveler.*
@@ -19,6 +20,7 @@ import com.example.traveler.ViewModels.MainViewModel
 import com.example.traveler.adaptors.TrackAdapter
 import com.example.traveler.databinding.ActivityMapBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 
@@ -26,7 +28,7 @@ import pub.devrel.easypermissions.EasyPermissions
 @AndroidEntryPoint
 class MapActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
     private val viewModel: MainViewModel by viewModels()
-
+    private lateinit var itemTouchHelper: ItemTouchHelper
     private lateinit var binding: ActivityMapBinding
     private lateinit var prefManager: PrefManager
     private lateinit var rvTracks: RecyclerView
@@ -37,9 +39,10 @@ class MapActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
         binding = ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
         prefManager = PrefManager(this)
-
+        spFilter = findViewById(R.id.spFilter)
         rvTracks = findViewById(R.id.rvTracks)
         setupRecyclerView()
+        requestPermissions()
 
         when(viewModel.sortType){
             SortType.DATE -> spFilter.setSelection(0)
@@ -65,6 +68,8 @@ class MapActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
                 }
             }
         }
+
+
         viewModel.tracks.observe(this, Observer {
             trackAdapter.submitList(it)
         })
@@ -154,5 +159,38 @@ class MapActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
         trackAdapter = TrackAdapter()
         rvTracks.adapter = trackAdapter
         rvTracks.layoutManager = LinearLayoutManager(this)
+
+        // Create ItemTouchHelper and attach it to RecyclerView
+        itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                // Do nothing
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val track = trackAdapter.differ.currentList[position]
+                showDeleteConfirmationDialog(track)
+            }
+        })
+
+        itemTouchHelper.attachToRecyclerView(rvTracks)
+    }
+
+    private fun showDeleteConfirmationDialog(track: Track){
+        val dialog = MaterialAlertDialogBuilder(this, com.airbnb.lottie.R.style.AlertDialog_AppCompat)
+            .setTitle("Delete the track?")
+            .setMessage("Are you sure you want to delete this track?")
+            .setIcon(R.drawable.cancel)
+            .setPositiveButton("Delete") { dialog, _ ->
+                viewModel.deleteTrack(track)
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+        dialog.show()
     }
 }

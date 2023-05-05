@@ -7,18 +7,32 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.ItemTouchHelper.Callback.makeMovementFlags
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.traveler.DB.Track
 import com.example.traveler.R
 import com.example.traveler.TrackingUtility
+import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.*
 
 
 
 class TrackAdapter : RecyclerView.Adapter<TrackAdapter.TrackViewHolder>(){
-    inner class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+
+
+    inner class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+        init{
+            ivTrackImage = itemView.findViewById(R.id.ivTrackImage)
+            tvDate = itemView.findViewById(R.id.tvDate)
+            tvTime = itemView.findViewById(R.id.tvTime)
+            tvAvgSpeed = itemView.findViewById(R.id.tvAvgSpeed)
+            tvDistance = itemView.findViewById(R.id.tvDistance)
+        }
+    }
+
 
     private lateinit var ivTrackImage: ImageView
     private lateinit var tvDate: TextView
@@ -40,6 +54,8 @@ class TrackAdapter : RecyclerView.Adapter<TrackAdapter.TrackViewHolder>(){
 
     fun submitList(list: List<Track>) = differ.submitList(list)
 
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         return TrackViewHolder(
             LayoutInflater.from(parent.context).inflate(
@@ -58,6 +74,7 @@ class TrackAdapter : RecyclerView.Adapter<TrackAdapter.TrackViewHolder>(){
         val track = differ.currentList[position]
         holder.itemView.apply {
             Glide.with(this).load(track.img).into(ivTrackImage)
+
             val calendar = Calendar.getInstance().apply {
                 timeInMillis = track.timestamp
             }
@@ -74,4 +91,5 @@ class TrackAdapter : RecyclerView.Adapter<TrackAdapter.TrackViewHolder>(){
 
         }
     }
+
 }

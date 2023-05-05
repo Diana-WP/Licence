@@ -26,7 +26,7 @@
             android:layout_marginTop="30dp"
             android:text="@string/time"
             android:textSize="50sp"
-            app:layout_constraintBottom_toTopOf="@+id/btnToggleRun"
+            app:layout_constraintBottom_toTopOf="@+id/btnToggleTrack"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
@@ -59,7 +59,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnToggleRun" />
+            app:layout_constraintTop_toBottomOf="@+id/btnToggleTrack" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

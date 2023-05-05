@@ -1,18 +1,22 @@
 package com.example.traveler.di
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import androidx.room.Room
+import com.example.traveler.Constants.SHARED_PREFERENCES_NAME
 import com.example.traveler.Constants.TRACKING_DATABASE_NAME
+import com.example.traveler.DB.TrackDAO
 import com.example.traveler.DB.TrackingDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ServiceComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
-@InstallIn(ServiceComponent::class)
+@InstallIn(SingletonComponent::class)
 object AppModule {
+
     @Singleton
     @Provides
     fun provideTrackingDatabase(
@@ -26,6 +30,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideTrackDao(db: TrackingDatabase) = db.getTrackDao()
+    fun provideTrackDao(db: TrackingDatabase): TrackDAO = db.getTrackDao()
+
 
 }

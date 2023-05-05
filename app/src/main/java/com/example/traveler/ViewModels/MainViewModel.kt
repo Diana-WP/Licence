@@ -6,9 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.traveler.DB.Track
 import com.example.traveler.MainRepository
 import com.example.traveler.SortType
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class MainViewModel @Inject constructor(
     val mainRepository: MainRepository
 ):ViewModel() {
@@ -44,16 +46,24 @@ class MainViewModel @Inject constructor(
             }
         }
     }
-    fun sortTracks(sortType: SortType) = when(sortType){
-        SortType.DATE -> tracksSortedByDate.value?.let{ tracks.value = it }
-        SortType.TRACKING_TIME -> tracksSortedByTime.value?.let{ tracks.value = it }
-        SortType.DISTANCE -> tracksSortedByDistance.value?.let{ tracks.value = it }
-        SortType.AVG_SPEED -> tracksSortedByAvgSpeed.value?.let{ tracks.value = it }
 
-    }.also{
+    fun sortTracks(sortType: SortType) = when (sortType) {
+        SortType.DATE -> tracksSortedByDate.value?.let { tracks.value = it }
+        SortType.TRACKING_TIME -> tracksSortedByTime.value?.let { tracks.value = it }
+        SortType.DISTANCE -> tracksSortedByDistance.value?.let { tracks.value = it }
+        SortType.AVG_SPEED -> tracksSortedByAvgSpeed.value?.let { tracks.value = it }
+
+    }.also {
         this.sortType = sortType
     }
+
     fun insertTrack(track: Track) = viewModelScope.launch {
         mainRepository.insertTrack(track)
+    }
+
+    fun deleteTrack(track: Track) {
+        viewModelScope.launch {
+            mainRepository.deleteTrack(track)
+        }
     }
 }
