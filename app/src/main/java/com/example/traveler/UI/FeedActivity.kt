@@ -1,36 +1,99 @@
 package com.example.traveler.UI
 
-import android.app.Activity
+import DataClass
+import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.ImageDecoder
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
-import android.view.View
-import android.widget.ImageView
+import androidx.appcompat.widget.SearchView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.traveler.R
+import com.example.traveler.adaptors.PostAdapter
 import com.example.traveler.databinding.ActivityFeedBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import java.util.Locale
 
 
 @Suppress("DEPRECATION")
 class FeedActivity : AppCompatActivity() {
-        private var pickedPhoto : Uri? = null
-        private var pickedBitMap : Bitmap? = null
-        private lateinit var imageView: ImageView
-        private lateinit var binding: ActivityFeedBinding
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-            binding = ActivityFeedBinding.inflate(layoutInflater)
-            setContentView(binding.root) // add this line to set the layout
-            imageView = findViewById(R.id.imageView)
-            // Initialize and assign variable
+    private lateinit var fab: FloatingActionButton
+    private lateinit var databaseReference: DatabaseReference
+    private lateinit var binding : ActivityFeedBinding
+    private lateinit var eventListener: ValueEventListener
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var dataList: MutableList<DataClass>
+    private lateinit var adapter: PostAdapter
+    private lateinit var searchView: SearchView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityFeedBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        recyclerView = findViewById(R.id.recyclerView)
+        fab = findViewById(R.id.fab)
+        searchView = findViewById(R.id.search)
+        searchView.clearFocus()
+
+        val gridLayoutManager = GridLayoutManager(this, 1)
+        recyclerView.layoutManager = gridLayoutManager
+
+        val builder = AlertDialog.Builder(this)
+        builder.setCancelable(false)
+        builder.setView(R.layout.progress_layout)
+        val dialog = builder.create()
+        dialog.show()
+
+        dataList = mutableListOf()
+
+        adapter = PostAdapter(this, dataList)
+        recyclerView.adapter = adapter
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("Traveler")
+        dialog.show()
+        eventListener = databaseReference.addValueEventListener(object : ValueEventListener {
+            @SuppressLint("NotifyDataSetChanged")
+            override fun onDataChange(snapshot: DataSnapshot) {
+                dataList.clear()
+                for (itemSnapshot in snapshot.children) {
+                    val dataClass = itemSnapshot.getValue(DataClass::class.java)
+                    dataClass?.let {
+                        it.key = itemSnapshot.key.toString()
+                        dataList.add(it)
+                    }
+                }
+                adapter.notifyDataSetChanged()
+                dialog.dismiss()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                dialog.dismiss()
+            }
+        })
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                searchList(newText)
+                return true
+            }
+        })
+
+        fab.setOnClickListener {
+            val intent = Intent(this, PostActivity::class.java)
+            startActivity(intent)
+        }
+
             val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
             // Set Home selected
             bottomNavigationView.selectedItemId = R.id.feed
@@ -60,53 +123,18 @@ class FeedActivity : AppCompatActivity() {
                         overridePendingTransition(0, 0)
                         return@OnNavigationItemSelectedListener true
                     }
-
-
                 }
                 false
             })
         }
-
-        fun pickedPhoto(view: View){
-            if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(
-                    this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
-                    1
-                )
-            }else {
-                val galleryIntext = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                startActivityForResult(galleryIntext,2 )
+    private fun searchList(text: String) {
+        val searchList = ArrayList<DataClass>()
+        for (dataClass in dataList) {
+            if (dataClass.dataName?.toLowerCase(Locale.ROOT)?.contains(text.toLowerCase(Locale.ROOT)) == true) {
+                searchList.add(dataClass)
             }
         }
-
-        override fun onRequestPermissionsResult(
-            requestCode: Int,
-            permissions: Array<out String>,
-            grantResults: IntArray
-        ) {
-            if(grantResults.size>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                val galeriIntext = Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                startActivityForResult(galeriIntext, 2)
-            }
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        }
-
-        @Deprecated("Deprecated in Java")
-        override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-            if (requestCode == 2 && resultCode == Activity.RESULT_OK && data != null){
-                pickedPhoto = data.data
-                if (Build.VERSION.SDK_INT >=28) {
-                    val source = ImageDecoder.createSource(this.contentResolver, pickedPhoto!!)
-                    pickedBitMap =ImageDecoder.decodeBitmap(source)
-                    imageView.setImageBitmap(pickedBitMap)
-                }
-                else {
-                    pickedBitMap = MediaStore.Images.Media.getBitmap(this.contentResolver, pickedPhoto)
-                    imageView.setImageBitmap(pickedBitMap)
-                }
-            }
-            super.onActivityResult(requestCode, resultCode, data)
-        }
+        adapter.searchDataList(searchList)
+    }
 
 }

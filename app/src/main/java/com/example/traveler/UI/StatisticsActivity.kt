@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import com.example.traveler.*
 import com.example.traveler.ViewModels.StatisticsViewModel
 import com.example.traveler.databinding.ActivityStatisticsBinding
+import com.github.mikephil.charting.charts.LineChart
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -23,6 +24,7 @@ class StatisticsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityStatisticsBinding
     private lateinit var prefManager: PrefManager
     private lateinit var database: DatabaseReference
+    private lateinit var lineChart: LineChart
     private lateinit var tvTotalDistance: TextView
     private lateinit var tvTotalTime: TextView
     private lateinit var tvAverageSpeed: TextView
@@ -34,7 +36,7 @@ class StatisticsActivity : AppCompatActivity() {
         binding = ActivityStatisticsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         prefManager = PrefManager(this)
-
+        lineChart = findViewById(R.id.lineChart)
         tvTotalTime = findViewById(R.id.tvTotalTime) // add this line to initialize tvTotalTime
         tvTotalDistance = findViewById(R.id.tvTotalDistance) // add this line to initialize tvTotalDistance
         tvAverageSpeed = findViewById(R.id.tvAverageSpeed) // add this line to initialize tvAverageSpeed

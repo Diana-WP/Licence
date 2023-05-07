@@ -180,8 +180,8 @@
                 app:layout_constraintStart_toEndOf="@+id/tvAverageSpeedInfo"
                 app:layout_constraintTop_toBottomOf="@+id/tvTotalTime" />
 
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/barChart"
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/lineChart"
                 android:layout_width="411dp"
                 android:layout_height="262dp"
                 android:layout_marginTop="65dp"
@@ -237,9 +237,9 @@
         app:itemIconTint="@drawable/selector"
         app:itemTextColor="@drawable/selector"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/menu_navigation"
-        tools:layout_editor_absoluteX="-47dp" >
-    </com.google.android.material.bottomnavigation.BottomNavigationView>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/menu_navigation"></com.google.android.material.bottomnavigation.BottomNavigationView>
 
 
 
