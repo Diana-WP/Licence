@@ -35,12 +35,11 @@
 
     <ImageView
         android:id="@+id/recImage"
-        android:layout_width="302dp"
-        android:layout_height="221dp"
+        android:layout_width="match_parent"
+        android:layout_height="296dp"
         android:padding="8dp"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:src="@drawable/camera" />
-
 
 
 </androidx.cardview.widget.CardView>

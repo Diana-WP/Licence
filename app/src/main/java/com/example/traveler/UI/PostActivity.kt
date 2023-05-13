@@ -55,7 +55,15 @@ class PostActivity: AppCompatActivity() {
             if (result.resultCode == Activity.RESULT_OK) {
                 val data: Intent? = result.data
                 uri = data?.data
-                uploadImage.setImageURI(uri)
+                uploadImage.scaleType = ImageView.ScaleType.CENTER_CROP
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    val source = ImageDecoder.createSource(contentResolver, uri!!)
+                    val bitmap = ImageDecoder.decodeBitmap(source)
+                    uploadImage.setImageBitmap(bitmap)
+                } else {
+                    val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
+                    uploadImage.setImageBitmap(bitmap)
+                }
             } else {
                 Toast.makeText(this, "No Image Selected", Toast.LENGTH_SHORT).show()
             }
@@ -69,7 +77,6 @@ class PostActivity: AppCompatActivity() {
 
         postButton.setOnClickListener {
             saveData()
-            uploadData()
         }
     }
 
@@ -93,6 +100,7 @@ class PostActivity: AppCompatActivity() {
                     if (!isFinishing) {
                         dialog.dismiss()
                     }
+                    uploadData(imageURL)        // Pass the imageURL to the uploadData() method
                 }.addOnFailureListener {
                     if (!isFinishing) {
                         dialog.dismiss()
@@ -109,9 +117,10 @@ class PostActivity: AppCompatActivity() {
     }
 
 
-    private fun uploadData() {
+    private fun uploadData(imageURL: String) {
         val name = uploadName.text.toString()
         val desc = uploadDesc.text.toString()
+
         val dataClass = DataClass(name, desc, imageURL)
 
         // We are changing the child from title to currentDate,

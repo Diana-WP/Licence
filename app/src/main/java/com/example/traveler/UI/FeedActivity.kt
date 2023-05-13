@@ -4,11 +4,13 @@ import DataClass
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageView
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.traveler.R
 import com.example.traveler.adaptors.PostAdapter
 import com.example.traveler.databinding.ActivityFeedBinding
@@ -130,7 +132,9 @@ class FeedActivity : AppCompatActivity() {
     private fun searchList(text: String) {
         val searchList = ArrayList<DataClass>()
         for (dataClass in dataList) {
-            if (dataClass.dataName?.toLowerCase(Locale.ROOT)?.contains(text.toLowerCase(Locale.ROOT)) == true) {
+            if (dataClass.dataName?.toLowerCase(Locale.ROOT)
+                    ?.contains(text.toLowerCase(Locale.ROOT)) == true
+            ) {
                 searchList.add(dataClass)
             }
         }

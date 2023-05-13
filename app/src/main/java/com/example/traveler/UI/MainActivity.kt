@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var passwordText: EditText
     private lateinit var confirm_password: EditText
     private lateinit var phoneText: EditText
-    private val url: String = "http://192.168.0.105/traveler/register.php"
+    private val url: String = "http://192.168.168.120/traveler/register.php"
     private lateinit var requestQueue: RequestQueue
     private lateinit var prefManager: PrefManager
     private lateinit var binding: ActivityMainBinding

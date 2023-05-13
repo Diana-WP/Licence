@@ -53,6 +53,9 @@
         <activity
             android:name=".UI.PostActivity"
             android:exported="false" />
+        <activity
+            android:name=".UI.DetailActivity"
+            android:exported="false"/>
         <meta-data
             android:name="com.google.gms.version"
             android:value="@integer/google_play_services_version" />
