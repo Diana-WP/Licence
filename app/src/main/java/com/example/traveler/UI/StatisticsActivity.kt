@@ -13,8 +13,10 @@ import com.example.traveler.ViewModels.StatisticsViewModel
 import com.example.traveler.databinding.ActivityStatisticsBinding
 import com.github.mikephil.charting.charts.LineChart
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Math.round
 
@@ -142,6 +144,7 @@ class StatisticsActivity : AppCompatActivity() {
     }
     fun clickLogout(view: View){
         prefManager.removeData()
+        Firebase.auth.signOut()
         Toast.makeText(this, "You logged out", Toast.LENGTH_LONG).show()
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)

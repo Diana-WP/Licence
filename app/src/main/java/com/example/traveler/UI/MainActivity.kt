@@ -3,6 +3,7 @@ package com.example.traveler.UI
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -19,15 +20,20 @@ import com.example.traveler.PrefManager
 import com.example.traveler.R
 import com.example.traveler.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 @Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
+    private lateinit var auth: FirebaseAuth
     private lateinit var emailText: EditText
     private lateinit var ageText: EditText
     private lateinit var passwordText: EditText
     private lateinit var confirm_password: EditText
     private lateinit var phoneText: EditText
-    private val url: String = "http://192.168.168.120/traveler/register.php"
+    private val url: String = "http://192.168.120.120/traveler/register.php"
     private lateinit var requestQueue: RequestQueue
     private lateinit var prefManager: PrefManager
     private lateinit var binding: ActivityMainBinding
@@ -42,7 +48,8 @@ class MainActivity : AppCompatActivity() {
         confirm_password = findViewById(R.id.confirm_password)
         binding.buttonReg.isEnabled = false
         prefManager = PrefManager(this)
-
+        // Initialize Firebase Auth
+        auth = Firebase.auth
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         // Set Home selected
         bottomNavigationView.selectedItemId = R.id.about
@@ -170,6 +177,26 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+    public override fun onStart() {
+        super.onStart()
+        // Check if user is signed in (non-null) and update UI accordingly.
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            reload()
+        }
+    }
+
+    private fun reload() {
+    }
+    companion object {
+        private const val TAG = "EmailPassword"
+    }
+
+
+
+
+    private fun updateUI(user: FirebaseUser?) {
+    }
 
     private fun init(){
         prefManager = PrefManager(this)
@@ -253,6 +280,7 @@ class MainActivity : AppCompatActivity() {
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(phone) || TextUtils.isEmpty(age) || TextUtils.isEmpty(password) ) {
             Toast.makeText(this, "Please fill all the fields.", Toast.LENGTH_SHORT).show()
         } else {
+            auth.createUserWithEmailAndPassword(email, password)
             val stringRequest = object : StringRequest(
                 Method.POST, url,
                 Response.Listener { response ->
@@ -260,18 +288,24 @@ class MainActivity : AppCompatActivity() {
                     if (response.trim().equals("Registration successful")) {
                         Toast.makeText(this, "Registration success", Toast.LENGTH_LONG).show()
                         prefManager.setLogin(true)
+                        val user = auth.currentUser
+                        updateUI(user)
                         //It will open the next activity
                         val intent = Intent(this, FeedActivity::class.java)
                         startActivity(intent)
                         finish()
                     } else if(response.trim().equals("Error: User is already registered")) {
+                        auth.signInWithEmailAndPassword(email, password)
                         Toast.makeText(this, "User already registered", Toast.LENGTH_LONG).show()
                         prefManager.setLogin(true)
+                        val user = auth.currentUser
+                        updateUI(user)
                         //It will open the next activity
                         val intent = Intent(this, FeedActivity::class.java)
                         startActivity(intent)
                         finish()
                     } else{
+                        updateUI(null)
                         Toast.makeText(this, "Registration failed", Toast.LENGTH_LONG).show()
                     }
                 },
@@ -296,4 +330,5 @@ class MainActivity : AppCompatActivity() {
             requestQueue.add(stringRequest)
         }
     }
+
 }
